@@ -23,7 +23,6 @@ namespace Server
             _udpState = new UdpState();
             _udpState.serverEP = new IPEndPoint(IPAddress.IPv6Any, 80);
             _udpState.udpClient = new UdpClient(_udpState.serverEP);
-            //_udpState.udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true); //allow port use across udpclients
             //_udpState.udpClient.Client.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false); //accept IPv6 or IPv4 etc.
         }
 
@@ -36,6 +35,7 @@ namespace Server
                 try
                 {
                     _udpState.udpClient.BeginReceive(new AsyncCallback(ListenerCallBack), _udpState);
+                    
                     Thread.Sleep(15); //defaults to 15.6ms (64 ticks per second)
                 }
                 catch (Exception ex)
@@ -49,7 +49,6 @@ namespace Server
                     continue;
                 }
             }
-
         }
 
         public void StopServer()
@@ -80,8 +79,7 @@ namespace Server
             Console.WriteLine($"Handshaking with {udpState.serverEP.Address}...");
             byte[] reply = Encoding.ASCII.GetBytes("Pong!");
 
-            udpState.udpClient.Connect(udpState.serverEP);
-            udpState.udpClient.Send(reply, reply.Length);
+            udpState.udpClient.Send(reply, reply.Length, udpState.serverEP);
         }
     }
 }
