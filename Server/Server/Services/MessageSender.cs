@@ -15,6 +15,15 @@ namespace Server.Services
         public void SendPartnerDisconnectMessage(Client client)
         {
             //The client that disconnected should message the user itself. i.e. the client should check for disconnection from the server.
+            /*
+            foreach(GameState gameState in _gameSessions.Values)
+            {
+                if(DateTime.Now - gameState.client.LastMessageReceivedAt >= InactivityThreshold)
+                {
+                    _gameSessions.Remove(client.UdpState.ServerEP.Address);
+                }
+            }
+             */
         }
     }
 }

@@ -39,29 +39,15 @@ namespace Server.Game
 
         public void CreateGameSession(UdpState udpState)
         {
-            Client newClient = new Client()
-            {
-                GameStatus = Client.Status.InGame,
-                ClientId = "x",
-                UdpState = udpState,
-                LastMessageReceivedAt = DateTime.Now
-            };
 
-            _gameSessions.Add(udpState.ServerEP.Address, newClient);
         }
 
         /// <summary>
-        /// Checks for and removes clients which have been disconnected.
+        /// Checks for and removes games which are no longer active.
         /// </summary>
         public void RemoveInactiveGameSessions()
         {
-            foreach(GameState gameState in _gameSessions.Values)
-            {
-                if(DateTime.Now - gameState.client.LastMessageReceivedAt >= InactivityThreshold)
-                {
-                    _gameSessions.Remove(client.UdpState.ServerEP.Address);
-                }
-            }
+
         }
     }
 }

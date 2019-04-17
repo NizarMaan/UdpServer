@@ -5,6 +5,6 @@
     /// </summary>
     public class GameState
     {
-        //keep track of players and world objects
+        //keep track of players and world objects in current match...
     }
 }
