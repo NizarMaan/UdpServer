@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Server.Models.Network;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Server
 {
     public class Server
     {
-        private  UdpState _udpState;
-
-        private struct UdpState
-        {
-            public UdpClient udpClient;
-            public IPEndPoint serverEP;
-        }
+        private UdpState _udpState;
 
         public Server()
         {
             _udpState = new UdpState();
-            _udpState.serverEP = new IPEndPoint(IPAddress.IPv6Any, 80);
-            _udpState.udpClient = new UdpClient(_udpState.serverEP);
+            _udpState.ServerEP = new IPEndPoint(IPAddress.IPv6Any, 80);
+            _udpState.UdpClient = new UdpClient(_udpState.ServerEP);
             //_udpState.udpClient.Client.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false); //accept IPv6 or IPv4 etc.
         }
 
@@ -34,7 +27,7 @@ namespace Server
             {
                 try
                 {
-                    _udpState.udpClient.BeginReceive(new AsyncCallback(ListenerCallBack), _udpState);
+                    _udpState.UdpClient.BeginReceive(new AsyncCallback(ListenerCallBack), _udpState);
                     
                     Thread.Sleep(15); //defaults to 15.6ms (64 ticks per second)
                 }
@@ -53,7 +46,7 @@ namespace Server
 
         public void StopServer()
         {
-            _udpState.udpClient.Close();
+            _udpState.UdpClient.Close();
             Console.WriteLine("Closed server connection...");
         }
 
@@ -61,7 +54,7 @@ namespace Server
         {
             UdpState udpState = (UdpState)asyncResult.AsyncState;
 
-            byte[] receivedBytes = udpState.udpClient.EndReceive(asyncResult, ref udpState.serverEP);
+            byte[] receivedBytes = udpState.UdpClient.EndReceive(asyncResult, ref udpState.ServerEP);
             string receivedString = Encoding.ASCII.GetString(receivedBytes);
 
             if (receivedString.Equals("Ping!"))
@@ -70,16 +63,16 @@ namespace Server
             }
             else
             {
-                Console.WriteLine($"Received message {receivedString} from client at IP address: {udpState.serverEP.Address}");
+                Console.WriteLine($"Received message {receivedString} from client at IP address: {udpState.ServerEP.Address}");
             }
         }
 
         private void HandshakeReply(UdpState udpState)
         {
-            Console.WriteLine($"Handshaking with {udpState.serverEP.Address}...");
+            Console.WriteLine($"Handshaking with {udpState.ServerEP.Address}...");
             byte[] reply = Encoding.ASCII.GetBytes("Pong!");
 
-            udpState.udpClient.Send(reply, reply.Length, udpState.serverEP);
+            udpState.UdpClient.Send(reply, reply.Length, udpState.ServerEP);
         }
     }
 }
