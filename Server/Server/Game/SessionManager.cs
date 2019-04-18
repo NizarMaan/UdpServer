@@ -1,4 +1,4 @@
-﻿using Server.Models.Game;
+﻿using Server.Models.Messaging.Game;
 using Server.Models.Network;
 using System;
 using System.Collections.Generic;
@@ -38,6 +38,11 @@ namespace Server.Game
         }
 
         public void CreateGameSession(UdpState udpState)
+        {
+
+        }
+
+        public void RemoveGameSession()
         {
 
         }

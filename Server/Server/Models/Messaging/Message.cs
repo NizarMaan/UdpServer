@@ -7,14 +7,15 @@ namespace Server.Models.Messaging
     /// </summary>
     public class Message
     {
-        [JsonProperty("msg_type")]
+        [JsonProperty("msg_type", Required = Required.Always)]
         public MessageTypes MessageType { get; set; }
 
         public enum MessageTypes
         {
             Handshake,
             GameState,
-            PlayerUpdate
+            PlayerUpdate,
+            QueueMatchRequest
         }
     }
 }
