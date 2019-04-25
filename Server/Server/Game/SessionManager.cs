@@ -1,5 +1,6 @@
 ﻿using Server.Models.Messaging.Game;
 using Server.Models.Network;
+using Server.Models.Utility;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -37,12 +38,15 @@ namespace Server.Game
 
         }
 
-        public void CreateGameSession(UdpState udpState)
+        public void CreateGameSession(Match match)
         {
+            GameState newGame = new GameState();
 
+            _gameSessions.Add(match.Client0.UdpState.ServerEP.Address, newGame);
+            _gameSessions.Add(match.Client1.UdpState.ServerEP.Address, newGame);
         }
 
-        public void RemoveGameSession()
+        public void EndGameSession()
         {
 
         }
@@ -54,5 +58,7 @@ namespace Server.Game
         {
 
         }
+
+        public 
     }
 }

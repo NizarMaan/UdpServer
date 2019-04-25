@@ -1,7 +1,9 @@
 ﻿using NJsonSchema;
+using Server.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Services
 {
@@ -12,34 +14,33 @@ namespace Server.Services
     {
         /// <summary>
         /// Validates that the given input Json matches the specified POCO representation.
+        /// Returns a string array of errors.
         /// </summary>
         /// <param name="inputJson"></param>
         /// <param name="objectType"></param>
         /// <param name="allowAdditionalProperties"></param>
         /// <returns></returns>
-        public static async Task<> ValidateJsonAsync(dynamic inputJson, Type objectType, bool allowAdditionalProperties)
+        public static async Task<Exception> ValidateJsonAsync(dynamic inputJson, Type objectType, bool allowAdditionalProperties)
         {
+            Exception exception = null;
             JsonSchema4 jsonSchema = await JsonSchema4.FromTypeAsync(objectType);
             jsonSchema.AllowAdditionalProperties = allowAdditionalProperties;
 
             ICollection<NJsonSchema.Validation.ValidationError> errors = jsonSchema.Validate(inputJson);
 
-            if (errors.Count == 0)
+            if (errors.Count != 0)
             {
-                return new BaseResponse(System.Net.HttpStatusCode.OK);
-            }
-            else
-            {
-                string[] jsonErrors = new string[errors.Count];
-                for (int i = 0; i < jsonErrors.Length; i++)
+                string jsonErrors = string.Empty;
+
+                for (int i = 0; i < errors.Count; i++)
                 {
-
-                    jsonErrors[i] = (errors.ElementAt(i).ToString());
-
+                    jsonErrors += $"{errors.ElementAt(i).ToString()} ";
                 }
 
-                return new BaseResponse(System.Net.HttpStatusCode.BadRequest, errorScope: objectType.Name, errorType: "invalid json", errorMessages: jsonErrors);
+                 exception = new InvalidMessageException(jsonErrors);
             }
+
+            return exception;
         }
     }
 }

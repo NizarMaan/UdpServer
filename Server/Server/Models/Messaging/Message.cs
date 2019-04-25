@@ -8,7 +8,7 @@ namespace Server.Models.Messaging
     public class Message
     {
         [JsonProperty("msg_type", Required = Required.Always)]
-        public MessageTypes MessageType { get; set; }
+        public int MessageType { get; set; }
 
         public enum MessageTypes
         {

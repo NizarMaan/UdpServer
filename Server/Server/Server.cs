@@ -1,4 +1,5 @@
 ﻿using Server.Models.Network;
+using Server.Services;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -10,6 +11,7 @@ namespace Server
     public class Server
     {
         private UdpState _udpState;
+        private Messenger _messenger;
 
         public Server()
         {
@@ -17,6 +19,7 @@ namespace Server
             _udpState.ServerEP = new IPEndPoint(IPAddress.IPv6Any, 80);
             _udpState.UdpClient = new UdpClient(_udpState.ServerEP);
             //_udpState.udpClient.Client.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false); //accept IPv6 or IPv4 etc.
+            _messenger = new Messenger();
         }
 
         public void Listen()
@@ -57,22 +60,9 @@ namespace Server
             byte[] receivedBytes = udpState.UdpClient.EndReceive(asyncResult, ref udpState.ServerEP);
             string receivedString = Encoding.ASCII.GetString(receivedBytes);
 
-            if (receivedString.Equals("Ping!"))
-            {
-                HandshakeReply(udpState);
-            }
-            else
-            {
-                Console.WriteLine($"Received message {receivedString} from client at IP address: {udpState.ServerEP.Address}");
-            }
-        }
+            _messenger.ProcessMessage(receivedString, udpState);
 
-        private void HandshakeReply(UdpState udpState)
-        {
-            Console.WriteLine($"Handshaking with {udpState.ServerEP.Address}...");
-            byte[] reply = Encoding.ASCII.GetBytes("Pong!");
-
-            udpState.UdpClient.Send(reply, reply.Length, udpState.ServerEP);
+            Console.WriteLine($"Received message {receivedString} from client at IP address: {udpState.ServerEP.Address}");
         }
     }
 }

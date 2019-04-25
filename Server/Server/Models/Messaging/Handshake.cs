@@ -7,7 +7,7 @@
     {
         public Handshake() : base()
         {
-            MessageType = MessageTypes.Handshake;
+            MessageType = (int) MessageTypes.Handshake;
         }
     }
 }

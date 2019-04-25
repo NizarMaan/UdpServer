@@ -7,7 +7,7 @@
     {
         public QueueMatchRequest() : base()
         {
-            MessageType = MessageTypes.QueueMatchRequest;
+            MessageType = (int) MessageTypes.QueueMatchRequest;
         }
     }
 }

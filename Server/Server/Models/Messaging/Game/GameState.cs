@@ -10,7 +10,7 @@ namespace Server.Models.Messaging.Game
     {
         public GameState() : base()
         {
-            MessageType = MessageTypes.GameState;
+            MessageType = (int) MessageTypes.GameState;
         }
 
         [JsonProperty("players", Required = Required.Always)]

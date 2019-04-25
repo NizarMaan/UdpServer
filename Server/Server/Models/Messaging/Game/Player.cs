@@ -9,10 +9,14 @@ namespace Server.Models.Messaging.Game
     {
         public Player() : base()
         {
-            MessageType = MessageTypes.PlayerUpdate;
+            MessageType = (int) MessageTypes.PlayerUpdate;
+            Health = 100;
         }
 
         [JsonProperty("position", Required = Required.Always)]
         public Position Position { get; set; }
+
+        [JsonProperty("health", Required = Required.Always)]
+        public int Health { get; set; }
     }
 }
