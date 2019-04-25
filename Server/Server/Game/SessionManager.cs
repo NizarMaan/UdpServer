@@ -58,7 +58,5 @@ namespace Server.Game
         {
 
         }
-
-        public 
     }
 }
