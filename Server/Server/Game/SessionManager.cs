@@ -42,8 +42,8 @@ namespace Server.Game
         {
             GameState newGame = new GameState();
 
-            _gameSessions.Add(match.Client0.UdpState.ServerEP.Address, newGame);
-            _gameSessions.Add(match.Client1.UdpState.ServerEP.Address, newGame);
+            _gameSessions.Add(match.Client0.ServerEP.Address, newGame);
+            _gameSessions.Add(match.Client1.ServerEP.Address, newGame);
         }
 
         public void EndGameSession()

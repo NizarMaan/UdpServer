@@ -56,7 +56,7 @@ namespace Server.Services
         }
 
         /// <summary>
-        /// Consumes the GameState message and sends it out to the clients in the same game.
+        /// Consumes the GameState message and sends the server response out to the clients in the same game.
         /// </summary>
         /// <param name="gameState"></param>
         /// <param name="udpState"></param>
@@ -70,7 +70,7 @@ namespace Server.Services
         /// stating that their game partner disconnected.
         /// </summary>
         /// <param name="client">The client to send error message to.</param>
-        public void SendPartnerDisconnectMessage(Client client)
+        public void SendPartnerDisconnectMessage(UdpState udpState)
         {
             //The client that disconnected should message the user itself. i.e. the client should check for disconnection from the server.
             /*

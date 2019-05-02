@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Net;
 
 namespace Server.Models.Messaging.Game
 {
@@ -13,10 +15,16 @@ namespace Server.Models.Messaging.Game
             Health = 100;
         }
 
+        [JsonProperty("ip_address", Required = Required.Always)]
+        public IPAddress ip_address { get; set; }
+
         [JsonProperty("position", Required = Required.Always)]
         public Position Position { get; set; }
 
         [JsonProperty("health", Required = Required.Always)]
         public int Health { get; set; }
+
+        [JsonProperty("last_message_sent_at", Required = Required.Always)]
+        public DateTime LastMessageSentAt { get; set; }
     }
 }

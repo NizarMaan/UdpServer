@@ -1,6 +1,7 @@
 ﻿using Server.Game;
 using Server.Models.Network;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Server.Services
 {
@@ -9,16 +10,16 @@ namespace Server.Services
     /// </summary>
     public class MatchMaker
     {
-        private List<Client> _matchQueue;
+        private Dictionary<IPAddress, UdpState> _matchQueue;
         private readonly SessionManager SessionManager;
 
         public MatchMaker()
         {
-            _matchQueue = new List<Client>();
+            _matchQueue = new Dictionary<IPAddress, UdpState>();
             SessionManager = SessionManager.GetSessionManager();
         }
 
-        public void AddToQueue()
+        public void AddToQueue(UdpState client)
         {
 
         }

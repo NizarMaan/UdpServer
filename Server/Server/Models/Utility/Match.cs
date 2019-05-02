@@ -7,15 +7,15 @@ namespace Server.Models.Utility
     /// </summary>
     public class Match
     {
-        public Match(Client client0, Client client1)
+        public Match(UdpState client0, UdpState client1)
         {
             Client0 = client0;
 
             Client1 = client1;
         }
 
-        public Client Client0 { get; set; }
+        public UdpState Client0 { get; set; }
 
-        public Client Client1 { get; set; }
+        public UdpState Client1 { get; set; }
     }
 }
