@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Server.Game;
 using Server.Models.Messaging;
 using Server.Models.Network;
+using Server.Models.Validation;
 using System;
 using System.Text;
 
@@ -22,9 +23,9 @@ namespace Server.Services
         /// <param name="udpState">The client the message came from.</param>
         public async void ProcessMessage(dynamic messageString, UdpState udpState)
         {
-            var result = await Validation.ValidateJsonAsync(inputJson: messageString, objectType: typeof(Message), allowAdditionalProperties: true);
+            ValidationResult validationResult = await Validation.ValidateMessageAsync(inputJson: messageString, objectType: typeof(Message), allowAdditionalProperties: true);
 
-            if(result == null)
+            if(validationResult.IsValid)
             {
                 Message message = JsonConvert.DeserializeObject(messageString);
                 switch (message.MessageType)
@@ -38,6 +39,7 @@ namespace Server.Services
                     case (2):
                         break;
                     case (3):
+                        ProcessQueueMatchRequest(messageString, udpState);
                         break;
                 }
             }
@@ -66,6 +68,15 @@ namespace Server.Services
         }
 
         /// <summary>
+        /// Consumes the QueueMatchRequest and adds the client to the matchmaking queue.
+        /// </summary>
+        private async void ProcessQueueMatchRequest(dynamic queueMatchRequest, UdpState udpState)
+        {
+            ValidationResult validationResult = await Validation.ValidateMessageAsync(inputJson: queueMatchRequest, objectType: typeof(QueueMatchRequest), allowAdditionalProperties: true);
+
+        }
+
+        /// <summary>
         /// Sends a disconnection error message to the given <paramref name="client"/>
         /// stating that their game partner disconnected.
         /// </summary>
@@ -73,15 +84,7 @@ namespace Server.Services
         public void SendPartnerDisconnectMessage(UdpState udpState)
         {
             //The client that disconnected should message the user itself. i.e. the client should check for disconnection from the server.
-            /*
-            foreach(GameState gameState in _gameSessions.Values)
-            {
-                if(DateTime.Now - gameState.client.LastMessageReceivedAt >= InactivityThreshold)
-                {
-                    _gameSessions.Remove(client.UdpState.ServerEP.Address);
-                }
-            }
-             */
+            //The server should also know when a client has disconnected
         }
     }
 }

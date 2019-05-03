@@ -1,5 +1,6 @@
 ﻿using NJsonSchema;
 using Server.Models.Exceptions;
+using Server.Models.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,10 @@ namespace Server.Services
         /// <param name="objectType"></param>
         /// <param name="allowAdditionalProperties"></param>
         /// <returns></returns>
-        public static async Task<Exception> ValidateJsonAsync(dynamic inputJson, Type objectType, bool allowAdditionalProperties)
+        public static async Task<ValidationResult> ValidateMessageAsync(dynamic inputJson, Type objectType, bool allowAdditionalProperties)
         {
-            Exception exception = null;
+            ValidationResult validationResult = new ValidationResult(true, null);
+
             JsonSchema4 jsonSchema = await JsonSchema4.FromTypeAsync(objectType);
             jsonSchema.AllowAdditionalProperties = allowAdditionalProperties;
 
@@ -37,10 +39,10 @@ namespace Server.Services
                     jsonErrors += $"{errors.ElementAt(i).ToString()} ";
                 }
 
-                 exception = new InvalidMessageException(jsonErrors);
+                validationResult = new ValidationResult(false, new InvalidMessageException(jsonErrors));
             }
 
-            return exception;
+            return validationResult;
         }
     }
 }
