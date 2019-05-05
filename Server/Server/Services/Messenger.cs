@@ -27,7 +27,7 @@ namespace Server.Services
 
             if(validationResult.IsValid)
             {
-                Message message = JsonConvert.DeserializeObject(messageString);
+                Message message = JsonConvert.DeserializeObject<Message>(messageString.ToString());
                 switch (message.MessageType)
                 {
                     case (0):
@@ -72,7 +72,7 @@ namespace Server.Services
         /// </summary>
         private async void ProcessQueueMatchRequest(dynamic queueMatchRequest, UdpState udpState)
         {
-            ValidationResult validationResult = await Validation.ValidateMessageAsync(inputJson: queueMatchRequest, objectType: typeof(QueueMatchRequest), allowAdditionalProperties: true);
+            ValidationResult validationResult = await Validation.ValidateMessageAsync(inputJson: queueMatchRequest, objectType: typeof(QueueMatchRequest), allowAdditionalProperties: false);
             MatchMaker matchMaker = MatchMaker.GetMatchMaker();
 
             if (validationResult.IsValid)
