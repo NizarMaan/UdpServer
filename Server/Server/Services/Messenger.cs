@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Server.Game;
 using Server.Models.Messaging;
 using Server.Models.Network;
+using Server.Models.Utility;
 using Server.Models.Validation;
 using System;
 using System.Text;
@@ -73,6 +73,22 @@ namespace Server.Services
         private async void ProcessQueueMatchRequest(dynamic queueMatchRequest, UdpState udpState)
         {
             ValidationResult validationResult = await Validation.ValidateMessageAsync(inputJson: queueMatchRequest, objectType: typeof(QueueMatchRequest), allowAdditionalProperties: true);
+            MatchMaker matchMaker = MatchMaker.GetMatchMaker();
+
+            if (validationResult.IsValid)
+            {
+                matchMaker.AddToQueue(udpState);
+            }
+
+        }
+
+        /// <summary>
+        /// Notifies the clients in the given <see cref="Match"/> that 
+        /// they've been placed in a match.
+        /// </summary>
+        /// <param name="match"></param>
+        public async void NotifyMatchFound(Match match)
+        {
 
         }
 

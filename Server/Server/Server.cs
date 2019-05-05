@@ -41,7 +41,7 @@ namespace Server
                     {ex.StackTrace}
                         {ex.InnerException}");
 
-                    Console.WriteLine("Restarting...");
+                    Console.WriteLine("Resuming...");
                     continue;
                 }
             }

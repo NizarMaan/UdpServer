@@ -1,42 +1,54 @@
 ﻿using Server.Game;
 using Server.Models.Network;
+using Server.Models.Utility;
 using System.Collections.Generic;
 using System.Net;
 
 namespace Server.Services
 {
     /// <summary>
-    /// Provides matching mechanics to pair two players to a game.
+    /// Provides matching mechanics to pair two players to a game. Singleton class, server should only have one matchmaker.
+    /// Works as a first-in first-out queue. Matches adjacent clients together.
     /// </summary>
     public class MatchMaker
     {
         private Dictionary<IPAddress, UdpState> _matchQueue;
-        private readonly SessionManager SessionManager;
+        private static MatchMaker _matchMaker;
 
-        public MatchMaker()
+        private MatchMaker()
         {
             _matchQueue = new Dictionary<IPAddress, UdpState>();
-            SessionManager = SessionManager.GetSessionManager();
+        }
+
+        public static MatchMaker GetMatchMaker()
+        {
+            if(_matchMaker == null)
+            {
+                _matchMaker = new MatchMaker();
+            }
+
+            return _matchMaker;
         }
 
         public void AddToQueue(UdpState client)
         {
-
+            _matchQueue.Add(client.ServerEP.Address, client);
         }
 
-        public void RemoveFromQueue()
+        public void RemoveFromQueue(UdpState client)
         {
-
+            _matchQueue.Remove(client.ServerEP.Address);
         }
 
-        public void FindMatches()
+        /// <summary>
+        /// Finds and creates a match between two clients in the <see cref="SessionManager"/>,
+        /// and then notifies them of their match-up.
+        /// </summary>
+        public List<Match> FindAndCreateMatches()
         {
+            List<Match> matches = new List<Match>();
 
-        }
-
-        public void CreateMatch()
-        {
-
+            return matches;
         }
     }
 }
